@@ -60,7 +60,7 @@ def parse_lines(lns):
 # Converts something like "b[4] = x+2 > y*-3" to
 # [ 'b', '[', '4', ']', '=', 'x', '+', '2', '>', 'y', '*', '-', '3' ]
 def chartype(c):
-    if c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.':
+    if c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._':
         return 'alphanum'
     elif c in '\t ': return 'space'
     elif c in '()[]': return 'brack'
@@ -122,7 +122,7 @@ def toktype(token):
     elif token in ['!']: return 'monop' 
     elif not isinstance(token,str): return 'compound'
     elif token in precedence: return 'op'
-    elif re.match('^[0-9a-z\-\.]*$',token): return 'alphanum'
+    elif re.match('^[0-9a-z_\-\.]*$',token): return 'alphanum'
     else: raise Exception("Invalid token: "+token)
 
 # https://en.wikipedia.org/wiki/Shunting-yard_algorithm

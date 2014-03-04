@@ -104,6 +104,8 @@ def compile_expr(expr,varhash):
     elif expr[0] == 'access':
         if expr[1][0] == 'block.contract_storage':
             return compile_expr(expr[2],varhash) + compile_expr(expr[1][1],varhash) + ['EXTRO']
+        elif expr[1] == 'block.address_balance':
+            return compile_expr(expr[2],varhash) + ['BALANCE']
         elif expr[1] == 'contract.storage':
             return compile_expr(expr[2],varhash) + ['SLOAD']
         elif expr[1] == 'tx.data':
@@ -174,7 +176,7 @@ def compile_stmt(stmt,varhash={},lc=[0]):
     elif stmt == 'stop':
         return [ 'STOP' ]
     elif stmt[0] == 'fun' and stmt[1] == 'suicide':
-        return compile_expr(stmt[2]) + [ 'SUICIDE' ]
+        return compile_expr(stmt[2],varhash) + [ 'SUICIDE' ]
         
 
 # Dereference labels
