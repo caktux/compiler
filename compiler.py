@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import re, sys, os
-from cllparser import *
+from parser import *
 
 # All functions go here
 #
