@@ -87,7 +87,7 @@ def fromhex(b):
 
 def is_numberlike(b):
     if isinstance(b,(str,unicode)):
-        if re.match('^[0-9\-]*$',b):
+        if re.match('^[0-9\-]*$',b) or b[:2] == '0x':
             return True
         if b[0] in ["'",'"'] and b[-1] in ["'",'"'] and b[0] == b[-1]:
             return True
@@ -167,17 +167,17 @@ def compile_expr(ast,varhash,lc=[0]):
             return compile_expr(ast[2],varhash,lc) + [ varhash[ast[1]], 'MSTORE' ]
     # If and if/else statements
     elif ast[0] == 'if':
-        f = compile_expr(stmt[1],varhash,lc)
-        g = compile_expr(stmt[2],varhash,lc)
-        h = compile_expr(stmt[3],varhash,lc) if len(stmt) > 3 else None
+        f = compile_expr(ast[1],varhash,lc)
+        g = compile_expr(ast[2],varhash,lc)
+        h = compile_expr(ast[3],varhash,lc) if len(ast) > 3 else None
         label, ref = 'LABEL_'+str(lc[0]), 'REF_'+str(lc[0])
         lc[0] += 1
         if h: return f + [ 'NOT', ref, 'JUMPI' ] + g + [ ref, 'JUMP' ] + h + [ label ]
         else: return f + [ 'NOT', ref, 'JUMPI' ] + g + [ label ]
     # While loops
     elif ast[0] == 'while':
-        f = compile_expr(stmt[1],varhash,lc)
-        g = compile_expr(stmt[2],varhash,lc)
+        f = compile_expr(ast[1],varhash,lc)
+        g = compile_expr(ast[2],varhash,lc)
         beglab, begref = 'LABEL_'+str(lc[0]), 'REF_'+str(lc[0])
         endlab, endref = 'LABEL_'+str(lc[0]+1), 'REF_'+str(lc[0]+1)
         lc[0] += 2
